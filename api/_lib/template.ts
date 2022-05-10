@@ -14,12 +14,10 @@ const mono = readFileSync(`${__dirname}/../_fonts/Vera-Mono.woff2`).toString('ba
 function getCss(theme: string, fontSize: string) {
     let background = 'white';
     let foreground = 'black';
-    let radial = 'lightgray';
 
     if (theme === 'dark') {
-        background = 'black';
+        background = '#242325';
         foreground = 'white';
-        radial = 'dimgray';
     }
     return `
     @font-face {
@@ -45,7 +43,8 @@ function getCss(theme: string, fontSize: string) {
 
     body {
         background: ${background};
-        background-image: radial-gradient(circle at 25px 25px, ${radial} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${radial} 2%, transparent 0%);
+        background-color: #38BDF8;
+       background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23007fff' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
         background-size: 100px 100px;
         height: 100vh;
         display: flex;
@@ -104,7 +103,7 @@ function getCss(theme: string, fontSize: string) {
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, theme, md, fontSize, images, widths, heights } = parsedReq;
+    const { text, theme, md, fontSize } = parsedReq;
     return `<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
@@ -117,9 +116,13 @@ export function getHtml(parsedReq: ParsedRequest) {
         <div>
             <div class="spacer">
             <div class="logo-wrapper">
-                ${images.map((img, i) =>
-                    getPlusSign(i) + getImage(img, widths[i], heights[i])
-                ).join('')}
+            <img
+            class="logo"
+            alt="Generated Image"
+            src="https://andrewusher.dev/penguin.svg"
+            width="auto"
+            height="300"
+        />
             </div>
             <div class="spacer">
             <div class="heading">${emojify(
@@ -129,18 +132,4 @@ export function getHtml(parsedReq: ParsedRequest) {
         </div>
     </body>
 </html>`;
-}
-
-function getImage(src: string, width ='auto', height = '225') {
-    return `<img
-        class="logo"
-        alt="Generated Image"
-        src="${sanitizeHtml(src)}"
-        width="${sanitizeHtml(width)}"
-        height="${sanitizeHtml(height)}"
-    />`
-}
-
-function getPlusSign(i: number) {
-    return i === 0 ? '' : '<div class="plus">+</div>';
 }
